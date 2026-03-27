@@ -1,0 +1,99 @@
+name: pre-commit & tests
+
+env:
+  AWS_REGION: af-south-1
+  AWS_ROLE_ARN: arn:aws:iam::353444730604:role/cat-genrl-prd-infra-github-workflows
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+
+concurrency:
+  # https://stackoverflow.com/questions/66335225/how-to-cancel-previous-runs-in-the-pr-when-you-push-new-commitsupdate-the-curre
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  # Enabling cancel-in-progress can cause non-graceful Terraform
+  # exit which leaves the state file in a locked state
+  #
+  # cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+defaults:
+  # Set shell for steps inside containers (default=sh)
+  run:
+    shell: bash
+
+jobs:
+  #--------------------------------------------------------------
+  # PRE-COMMIT
+  #--------------------------------------------------------------
+  pre_commit:
+    name: 💍 pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v3
+        with:
+          log_level: debug
+          cache: true
+
+      - name: pre-commit run
+        run: |
+          echo ...running pre-commit checks...
+          pre-commit run --config .pre-commit-config.yaml --all-files --show-diff-on-failure
+        env:
+          # trivy-scan.yml runs a dedicated trivy scan; skip here to avoid redundancy
+          # and GitHub API rate limits when mise downloads trivy on CI runners.
+          SKIP: trivy-config
+
+  #--------------------------------------------------------------
+  # UNIT TESTS (no AWS credentials required)
+  #--------------------------------------------------------------
+  unit_tests:
+    name: 🧪 unit tests
+    needs: [pre_commit]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v3
+        with:
+          cache: true
+
+      - name: Run unit tests
+        run: |
+          tofu init -backend=false
+          tofu test
+
+  #--------------------------------------------------------------
+  # INTEGRATION TESTS (require real AWS credentials)
+  # For public repos use runs-on: ubuntu-latest with OIDC role
+  # For private repos use runs-on: codebuild-...
+  #--------------------------------------------------------------
+  integration_tests:
+    name: 🔌 integration tests
+    needs: [pre_commit]
+    runs-on: codebuild-${{ github.repository_owner }}-${{ github.event.repository.name }}-runner-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v3
+        with:
+          cache: true
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-duration-seconds: 3600
+
+      - name: Run integration tests
+        run: tofu test -test-directory=tests/integration
+        timeout-minutes: 30

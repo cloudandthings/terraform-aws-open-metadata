@@ -1,0 +1,108 @@
+# https://pre-commit.com/
+
+exclude: |
+  (?x)^(
+      ^modules/external/.*$|
+      ^.terraform/.*$
+  )$
+
+repos:
+  # PRECOMMIT - GENERAL
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-case-conflict
+      - id: check-json
+        exclude: tsconfig.json|devcontainer.json
+      # - id: pretty-format-json
+      #   exclude: tsconfig.json|package-lock.json|package.json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: check-xml
+      - id: check-yaml
+      - id: detect-aws-credentials
+        args: ["--allow-missing-credentials"]
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: no-commit-to-branch
+        args: ["--branch", "develop", "--branch", "main", "--branch", "master"]
+      - id: trailing-whitespace
+
+  # CODESPELL
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.2
+    hooks:
+    - id: codespell
+      args:
+      - "--write-changes"
+
+  # SHFMT
+  - repo: local
+    hooks:
+      - id: shfmt
+        name: shfmt
+        entry: shfmt -w
+        language: system
+        types: [shell]
+
+  # SHELLCHECK
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck --severity=warning
+        language: system
+        types: [shell]
+
+  # TERRAFORM
+  # If running tf-docs it must be run first to avoid race condition relating to version constraints.
+  # The terraform_docs pre-commit hook cannot be used twice in the same run (hook conflict bug),
+  # so we use a local shell script to run terraform-docs on both the root module and all examples.
+  - repo: local
+    hooks:
+      - id: terraform-docs
+        name: terraform-docs
+        entry: examples/terraform-docs.sh
+        language: system
+        always_run: true
+        pass_filenames: false
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.105.0
+    hooks:
+      # - id: terraform_docs
+      #  args:
+      #    - --args=--lockfile=false
+      #    - --args=--config=.tfdocs-config.yml
+      - id: terraform_fmt
+      - id: terraform_validate
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+        # [^/]+: Exclude root module. Validation is done via examples/basic
+        # see https://github.com/antonbabenko/pre-commit-terraform#terraform_validate
+        exclude: |
+          (?x)^(
+              tests/.*|
+              [^/]+|
+          )$
+      - id: terraform_tflint
+        # Configure tflint by creating and updating the config file below.
+        args: ["--args=--config=__GIT_WORKING_DIR__/.tflint.hcl"]
+
+  # SECURITY
+  # Mirrors the trivy config scan in trivy-scan.yml CI workflow.
+  # Only the 'config' scan type is run here (IaC misconfig); the 'fs' vuln scan runs in CI only.
+  - repo: local
+    hooks:
+      - id: trivy-config
+        name: trivy config scan
+        entry: trivy config --severity HIGH,CRITICAL --exit-code 1 --skip-dirs .terraform --skip-dirs modules/external .
+        language: system
+        pass_filenames: false
+        always_run: true
