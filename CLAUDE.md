@@ -8,8 +8,8 @@ Terraform AWS Module Template — a starting point for creating well-structured,
 
 ### Terraform and OpenTofu Compatibility
 
-- Module `required_version`: `>= 1.5.0, < 2.0.0`
-- Works with Terraform ≥ 1.5.0 and OpenTofu ≥ 1.6.0 (MPL-2.0 open-source fork)
+- Module `required_version`: `>= 1.5.7, < 2.0.0`
+- Works with Terraform ≥ 1.5.7 and OpenTofu ≥ 1.6.0 (MPL-2.0 open-source fork)
 - Primary dev binary: `tofu` (OpenTofu). Terraform also installed for CI validation.
 - **Never** use `~> 1.x.y` patch constraints — `~> 1.5.7` resolves to `< 1.6.0`, excluding OpenTofu.
 - Stick to the shared feature baseline (TF/OpenTofu 1.6–1.8). Avoid features exclusive to one tool (e.g. Terraform 1.10+ ephemeral resources).
