@@ -7,14 +7,14 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Terraform and OpenTofu Compatibility
 
-This template is designed to work with both **[Terraform](https://www.terraform.io/)** (≥ 1.5.0)
+This template is designed to work with both **[Terraform](https://www.terraform.io/)** (≥ 1.5.7)
 and **[OpenTofu](https://opentofu.org/)** (≥ 1.6.0, the open-source MPL-2.0 fork).
 
 ### Version constraints
 
-The module's `required_version` is set to `>= 1.5.0, < 2.0.0`:
+The module's `required_version` is set to `>= 1.5.7, < 2.0.0`:
 
-- **Minimum 1.5.0**: the last MPL-2.0-licensed Terraform release. All OpenTofu releases (which
+- **Minimum 1.5.7**: the last MPL-2.0-licensed Terraform release. All OpenTofu releases (which
   start at 1.6.0) satisfy this constraint, as do all Terraform 1.6+ releases.
 - **Upper bound `< 2.0.0`**: guards against unknown future breaking changes.
 
