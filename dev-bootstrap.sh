@@ -5,4 +5,4 @@ mise trust -a
 mise install
 
 # pre-commit
-pre-commit install
+mise exec -- pre-commit install
