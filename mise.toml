@@ -2,14 +2,20 @@
 lockfile = true
 
 [tools]
-opentofu       = "1.8.8"
-terraform      = "1.9.8"   # Kept for CI matrix validation alongside OpenTofu
+opentofu       = "1.8.8"    # For CI matrix validation alongside Terraform
+terraform      = "1.9.8"    # For CI matrix validation alongside OpenTofu
 awscli         = "2.22.15"
 jq             = "1.8.1"
 pre-commit     = "4.5.1"
+# python       = "3.13"     # For pre-commit, included in docker image
 shellcheck     = "0.11.0"
 shfmt          = "3.13.0"
 starship       = "1.24.2"
 terraform-docs = "0.21.0"
 tflint         = "0.61.0"
 trivy          = "v0.69.3"
+
+# AI tools support
+fd             = "v10.4.2"
+github-cli     = "v2.89.0"
+ripgrep        = "15.1.0"
