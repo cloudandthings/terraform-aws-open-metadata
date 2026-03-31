@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0 (2026-03-31)
+
+
+### Features
+
+* Standardise module ([9da24ac](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/9da24ac077ec3109172331ea1000c53222ddf183))
+
+
+### Bug Fixes
+
+* devcontainers ([a5307b7](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/a5307b73a24355cf2cad7ac97f5b619bbee6c93e))
+
 ## [1.4.0](https://github.com/cloudandthings/terraform-aws-module-template/compare/v1.3.0...v1.4.0) (2026-03-27)
 
 
