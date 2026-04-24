@@ -20,6 +20,8 @@ module "eks" {
   name               = "${var.name}-eks"
   kubernetes_version = var.kubernetes_version
 
+  tags = var.tags
+
   iam_role_name                 = "omd-eks-cluster"
   iam_role_use_name_prefix      = true
   iam_role_path                 = var.iam_role_path

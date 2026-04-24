@@ -23,6 +23,12 @@ variable "name" {
   type        = string
 }
 
+variable "tags" {
+  description = "Tags to apply to all cluster resources."
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # Networking
 ################################################################################
