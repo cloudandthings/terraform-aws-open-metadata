@@ -137,6 +137,7 @@ variable "name_prefix" {
 variable "tags" {
   description = "Tags to apply to supported resources."
   type        = map(string)
+  default     = {}
 }
 
 ################################################################################
@@ -238,26 +239,31 @@ variable "openmetadata_fqdn" {
 variable "kubernetes_version" {
   description = "Kubernetes version for the EKS cluster."
   type        = string
+  default     = "1.35"
 }
 
 variable "eks_node_instance_type" {
   description = "Instance type for the default EKS managed node group."
   type        = string
+  default     = "m7g.large"
 }
 
 variable "eks_node_desired_size" {
   description = "Desired node count for the default EKS managed node group."
   type        = number
+  default     = 2
 }
 
 variable "eks_node_min_size" {
   description = "Minimum node count for the default EKS managed node group."
   type        = number
+  default     = 1
 }
 
 variable "eks_node_max_size" {
   description = "Maximum node count for the default EKS managed node group."
   type        = number
+  default     = 4
 }
 
 variable "eks_node_ami_id" {
@@ -316,11 +322,13 @@ variable "namespace_access_principals" {
 variable "database_name" {
   description = "OpenMetadata database name. Used as the managed RDS database name when create_rds is true. When create_rds is false, this database must already exist on existing_database_endpoint."
   type        = string
+  default     = "openmetadata"
 }
 
 variable "database_username" {
   description = "OpenMetadata database username. Used as the managed RDS username when create_rds is true. When create_rds is false, this user must already exist and have access to database_name."
   type        = string
+  default     = "openmetadata"
 }
 
 ################################################################################
@@ -330,21 +338,25 @@ variable "database_username" {
 variable "rds_instance_class" {
   description = "RDS instance class to create."
   type        = string
+  default     = "db.t3.medium"
 }
 
 variable "rds_engine_version" {
   description = "PostgreSQL engine version to create."
   type        = string
+  default     = "18.3"
 }
 
 variable "rds_family" {
   description = "Parameter group family for PostgreSQL to create."
   type        = string
+  default     = "postgres18"
 }
 
 variable "rds_allocated_storage" {
   description = "Allocated RDS storage in GB to create."
   type        = number
+  default     = 20
 }
 
 variable "rds_multi_az" {
@@ -381,26 +393,31 @@ variable "rds_ingress_cidr_blocks" {
 variable "opensearch_engine_version" {
   description = "OpenSearch engine version."
   type        = string
+  default     = "OpenSearch_3.3"
 }
 
 variable "opensearch_instance_type" {
   description = "OpenSearch node instance type."
   type        = string
+  default     = "m6g.large.search"
 }
 
 variable "opensearch_instance_count" {
   description = "OpenSearch data node count."
   type        = number
+  default     = 2
 }
 
 variable "opensearch_ebs_volume_size" {
   description = "OpenSearch EBS volume size in GB."
   type        = number
+  default     = 20
 }
 
 variable "opensearch_master_username" {
   description = "OpenSearch master username."
   type        = string
+  default     = "openmetadata"
 }
 
 ################################################################################
@@ -422,6 +439,7 @@ variable "openmetadata_heap_opts" {
 variable "namespace" {
   description = "Kubernetes namespace for OpenMetadata."
   type        = string
+  default     = "openmetadata"
 }
 
 ################################################################################

@@ -25,6 +25,7 @@
 | <a name="input_name"></a> [name](#input\_name) | Base name prefix for cluster resources. | `string` | n/a | yes |
 | <a name="input_oidc_thumbprints"></a> [oidc\_thumbprints](#input\_oidc\_thumbprints) | Custom OIDC root CA thumbprints. Required when include\_oidc\_root\_ca\_thumbprint is false. | `list(string)` | `[]` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Private subnet IDs for the cluster. | `list(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to all cluster resources. | `map(string)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID used by the cluster. | `string` | n/a | yes |
 
 ----

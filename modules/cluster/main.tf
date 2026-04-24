@@ -97,7 +97,7 @@ resource "aws_iam_role_policy" "eks_node_custom_inline" {
   count = var.create && var.create_node_group && var.eks_node_iam_role_policy_json != null ? 1 : 0
 
   name   = "${var.name}-node-custom-inline"
-  role   = module.eks.eks_managed_node_groups["default"].iam_role_id
+  role   = module.eks.eks_managed_node_groups["default"].iam_role_name
   policy = var.eks_node_iam_role_policy_json
 }
 
