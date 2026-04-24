@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/cloudandthings/terraform-aws-open-metadata/compare/v1.1.0...v1.1.1) (2026-04-24)
+
+
+### Bug Fixes
+
+* Apply tags to EC2 instances ([0e4f944](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/0e4f9443643f64c069781c3d2efb0abbfbf0fc39))
+* Optional variables ([091ad52](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/091ad52f57c96ae64abb55f0ef1f20c480605370))
+
 ## [1.1.0](https://github.com/cloudandthings/terraform-aws-open-metadata/compare/v1.0.0...v1.1.0) (2026-04-24)
 
 
