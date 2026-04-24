@@ -215,16 +215,16 @@ See [`CONTRIBUTING.md`](./.github/CONTRIBUTING.md) for further information.
 | <a name="input_create_opensearch_secret"></a> [create\_opensearch\_secret](#input\_create\_opensearch\_secret) | Whether to create the OpenSearch credentials secret. | `bool` | `true` | no |
 | <a name="input_create_rds"></a> [create\_rds](#input\_create\_rds) | Whether to create the PostgreSQL database. When false, provide existing\_database\_endpoint and existing\_database\_secret\_arn for any path that needs database connectivity. | `bool` | `true` | no |
 | <a name="input_create_rds_secret"></a> [create\_rds\_secret](#input\_create\_rds\_secret) | Whether to create the RDS credentials secret when create\_rds is true. Managed RDS currently requires this to remain true. | `bool` | `true` | no |
-| <a name="input_database_name"></a> [database\_name](#input\_database\_name) | OpenMetadata database name. Used as the managed RDS database name when create\_rds is true. When create\_rds is false, this database must already exist on existing\_database\_endpoint. | `string` | n/a | yes |
+| <a name="input_database_name"></a> [database\_name](#input\_database\_name) | OpenMetadata database name. Used as the managed RDS database name when create\_rds is true. When create\_rds is false, this database must already exist on existing\_database\_endpoint. | `string` | `"openmetadata"` | no |
 | <a name="input_database_secret_property"></a> [database\_secret\_property](#input\_database\_secret\_property) | Optional JSON property to extract from the database secret value. Leave null for plain string secrets. Defaults to password only when this module creates the database secret (create\_data, create\_rds, and create\_rds\_secret are all true). | `string` | `null` | no |
-| <a name="input_database_username"></a> [database\_username](#input\_database\_username) | OpenMetadata database username. Used as the managed RDS username when create\_rds is true. When create\_rds is false, this user must already exist and have access to database\_name. | `string` | n/a | yes |
+| <a name="input_database_username"></a> [database\_username](#input\_database\_username) | OpenMetadata database username. Used as the managed RDS username when create\_rds is true. When create\_rds is false, this user must already exist and have access to database\_name. | `string` | `"openmetadata"` | no |
 | <a name="input_eks_node_ami_id"></a> [eks\_node\_ami\_id](#input\_eks\_node\_ami\_id) | Approved AMI ID for the EKS managed node group. | `string` | n/a | yes |
 | <a name="input_eks_node_ami_type"></a> [eks\_node\_ami\_type](#input\_eks\_node\_ami\_type) | AMI type for the EKS managed node group. | `string` | `"AL2023_ARM_64_STANDARD"` | no |
-| <a name="input_eks_node_desired_size"></a> [eks\_node\_desired\_size](#input\_eks\_node\_desired\_size) | Desired node count for the default EKS managed node group. | `number` | n/a | yes |
+| <a name="input_eks_node_desired_size"></a> [eks\_node\_desired\_size](#input\_eks\_node\_desired\_size) | Desired node count for the default EKS managed node group. | `number` | `2` | no |
 | <a name="input_eks_node_iam_role_policy_json"></a> [eks\_node\_iam\_role\_policy\_json](#input\_eks\_node\_iam\_role\_policy\_json) | Optional JSON IAM policy document to attach to the default node role. | `string` | `null` | no |
-| <a name="input_eks_node_instance_type"></a> [eks\_node\_instance\_type](#input\_eks\_node\_instance\_type) | Instance type for the default EKS managed node group. | `string` | n/a | yes |
-| <a name="input_eks_node_max_size"></a> [eks\_node\_max\_size](#input\_eks\_node\_max\_size) | Maximum node count for the default EKS managed node group. | `number` | n/a | yes |
-| <a name="input_eks_node_min_size"></a> [eks\_node\_min\_size](#input\_eks\_node\_min\_size) | Minimum node count for the default EKS managed node group. | `number` | n/a | yes |
+| <a name="input_eks_node_instance_type"></a> [eks\_node\_instance\_type](#input\_eks\_node\_instance\_type) | Instance type for the default EKS managed node group. | `string` | `"m7g.large"` | no |
+| <a name="input_eks_node_max_size"></a> [eks\_node\_max\_size](#input\_eks\_node\_max\_size) | Maximum node count for the default EKS managed node group. | `number` | `4` | no |
+| <a name="input_eks_node_min_size"></a> [eks\_node\_min\_size](#input\_eks\_node\_min\_size) | Minimum node count for the default EKS managed node group. | `number` | `1` | no |
 | <a name="input_eks_node_startup_script"></a> [eks\_node\_startup\_script](#input\_eks\_node\_startup\_script) | Optional shell script to run on EKS node startup. | `string` | `null` | no |
 | <a name="input_enable_tls"></a> [enable\_tls](#input\_enable\_tls) | Whether to enable TLS for the OpenMetadata ingress. | `bool` | `false` | no |
 | <a name="input_existing_cluster_ca_data"></a> [existing\_cluster\_ca\_data](#input\_existing\_cluster\_ca\_data) | Existing cluster certificate authority data used when create\_cluster is false. | `string` | `null` | no |
@@ -242,10 +242,10 @@ See [`CONTRIBUTING.md`](./.github/CONTRIBUTING.md) for further information.
 | <a name="input_iam_role_permissions_boundary"></a> [iam\_role\_permissions\_boundary](#input\_iam\_role\_permissions\_boundary) | Permissions boundary ARN for IAM roles created by this module. | `string` | n/a | yes |
 | <a name="input_ingress_cidr_blocks"></a> [ingress\_cidr\_blocks](#input\_ingress\_cidr\_blocks) | CIDR ranges allowed inbound to the OpenMetadata ALB. | `list(string)` | `[]` | no |
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | KMS key ID or ARN used for data-plane encryption (EKS, RDS, OpenSearch). | `string` | n/a | yes |
-| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Kubernetes version for the EKS cluster. | `string` | n/a | yes |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Kubernetes version for the EKS cluster. | `string` | `"1.35"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Base name prefix used for named resources. | `string` | n/a | yes |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Short prefix for resources with stricter name limits (e.g. OpenSearch 28-char domain limit). | `string` | n/a | yes |
-| <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace for OpenMetadata. | `string` | n/a | yes |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace for OpenMetadata. | `string` | `"openmetadata"` | no |
 | <a name="input_namespace_access_principals"></a> [namespace\_access\_principals](#input\_namespace\_access\_principals) | Keyed map of principals that should get namespace-scoped access. | <pre>map(object({<br/>    principal_arn = string<br/>    namespaces    = list(string)<br/>    policy_arn    = optional(string, "arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy")<br/>  }))</pre> | `{}` | no |
 | <a name="input_oidc_thumbprints"></a> [oidc\_thumbprints](#input\_oidc\_thumbprints) | Custom OIDC root CA thumbprints for the EKS module. This module configures include\_oidc\_root\_ca\_thumbprint = false, so supply any required root CA thumbprints here. | `list(string)` | `[]` | no |
 | <a name="input_openmetadata_chart_version"></a> [openmetadata\_chart\_version](#input\_openmetadata\_chart\_version) | OpenMetadata Helm chart version. | `string` | `"1.12.3"` | no |
@@ -256,27 +256,27 @@ See [`CONTRIBUTING.md`](./.github/CONTRIBUTING.md) for further information.
 | <a name="input_openmetadata_heap_opts"></a> [openmetadata\_heap\_opts](#input\_openmetadata\_heap\_opts) | JVM heap options passed to OpenMetadata via OPENMETADATA\_HEAP\_OPTS. | `string` | `"-Xmx2G -Xms2G"` | no |
 | <a name="input_openmetadata_helm_set_sensitive_values"></a> [openmetadata\_helm\_set\_sensitive\_values](#input\_openmetadata\_helm\_set\_sensitive\_values) | Generic sensitive Helm set values applied directly to the OpenMetadata chart via set\_sensitive. | `map(string)` | `{}` | no |
 | <a name="input_openmetadata_helm_set_values"></a> [openmetadata\_helm\_set\_values](#input\_openmetadata\_helm\_set\_values) | Generic Helm set values applied directly to the OpenMetadata chart. Key is Helm path (for example openmetadata.config.authentication.provider), value is converted to string. | `map(any)` | `{}` | no |
-| <a name="input_opensearch_ebs_volume_size"></a> [opensearch\_ebs\_volume\_size](#input\_opensearch\_ebs\_volume\_size) | OpenSearch EBS volume size in GB. | `number` | n/a | yes |
-| <a name="input_opensearch_engine_version"></a> [opensearch\_engine\_version](#input\_opensearch\_engine\_version) | OpenSearch engine version. | `string` | n/a | yes |
-| <a name="input_opensearch_instance_count"></a> [opensearch\_instance\_count](#input\_opensearch\_instance\_count) | OpenSearch data node count. | `number` | n/a | yes |
-| <a name="input_opensearch_instance_type"></a> [opensearch\_instance\_type](#input\_opensearch\_instance\_type) | OpenSearch node instance type. | `string` | n/a | yes |
-| <a name="input_opensearch_master_username"></a> [opensearch\_master\_username](#input\_opensearch\_master\_username) | OpenSearch master username. | `string` | n/a | yes |
+| <a name="input_opensearch_ebs_volume_size"></a> [opensearch\_ebs\_volume\_size](#input\_opensearch\_ebs\_volume\_size) | OpenSearch EBS volume size in GB. | `number` | `20` | no |
+| <a name="input_opensearch_engine_version"></a> [opensearch\_engine\_version](#input\_opensearch\_engine\_version) | OpenSearch engine version. | `string` | `"OpenSearch_3.3"` | no |
+| <a name="input_opensearch_instance_count"></a> [opensearch\_instance\_count](#input\_opensearch\_instance\_count) | OpenSearch data node count. | `number` | `2` | no |
+| <a name="input_opensearch_instance_type"></a> [opensearch\_instance\_type](#input\_opensearch\_instance\_type) | OpenSearch node instance type. | `string` | `"m6g.large.search"` | no |
+| <a name="input_opensearch_master_username"></a> [opensearch\_master\_username](#input\_opensearch\_master\_username) | OpenSearch master username. | `string` | `"openmetadata"` | no |
 | <a name="input_opensearch_secret_property"></a> [opensearch\_secret\_property](#input\_opensearch\_secret\_property) | Optional JSON property to extract from the OpenSearch secret value. Leave null for plain string secrets. Defaults to password only when this module creates the OpenSearch secret (create\_data, create\_opensearch, and create\_opensearch\_secret are all true). | `string` | `null` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Private subnet IDs used by EKS and data-plane services. | `list(string)` | n/a | yes |
-| <a name="input_rds_allocated_storage"></a> [rds\_allocated\_storage](#input\_rds\_allocated\_storage) | Allocated RDS storage in GB to create. | `number` | n/a | yes |
+| <a name="input_rds_allocated_storage"></a> [rds\_allocated\_storage](#input\_rds\_allocated\_storage) | Allocated RDS storage in GB to create. | `number` | `20` | no |
 | <a name="input_rds_backup_retention_period"></a> [rds\_backup\_retention\_period](#input\_rds\_backup\_retention\_period) | Number of days to retain RDS automated backups for the created RDS. Set to 0 to disable backups. | `number` | `7` | no |
 | <a name="input_rds_deletion_protection"></a> [rds\_deletion\_protection](#input\_rds\_deletion\_protection) | Whether to enable RDS deletion protection on the created RDS. | `bool` | n/a | yes |
-| <a name="input_rds_engine_version"></a> [rds\_engine\_version](#input\_rds\_engine\_version) | PostgreSQL engine version to create. | `string` | n/a | yes |
-| <a name="input_rds_family"></a> [rds\_family](#input\_rds\_family) | Parameter group family for PostgreSQL to create. | `string` | n/a | yes |
+| <a name="input_rds_engine_version"></a> [rds\_engine\_version](#input\_rds\_engine\_version) | PostgreSQL engine version to create. | `string` | `"18.3"` | no |
+| <a name="input_rds_family"></a> [rds\_family](#input\_rds\_family) | Parameter group family for PostgreSQL to create. | `string` | `"postgres18"` | no |
 | <a name="input_rds_ingress_cidr_blocks"></a> [rds\_ingress\_cidr\_blocks](#input\_rds\_ingress\_cidr\_blocks) | Additional CIDR blocks allowed to reach the RDS instance on port 5432. Useful for direct database access from a bastion or developer machine. | `list(string)` | `[]` | no |
-| <a name="input_rds_instance_class"></a> [rds\_instance\_class](#input\_rds\_instance\_class) | RDS instance class to create. | `string` | n/a | yes |
+| <a name="input_rds_instance_class"></a> [rds\_instance\_class](#input\_rds\_instance\_class) | RDS instance class to create. | `string` | `"db.t3.medium"` | no |
 | <a name="input_rds_multi_az"></a> [rds\_multi\_az](#input\_rds\_multi\_az) | Whether to enable Multi-AZ on the created RDS. | `bool` | n/a | yes |
 | <a name="input_rds_skip_final_snapshot"></a> [rds\_skip\_final\_snapshot](#input\_rds\_skip\_final\_snapshot) | Whether to skip the final snapshot on RDS deletion. | `bool` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | AWS region for the deployment. | `string` | n/a | yes |
 | <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | Private Route53 hosted zone used for the OpenMetadata record. | `string` | `null` | no |
 | <a name="input_secrets_kms_key_id"></a> [secrets\_kms\_key\_id](#input\_secrets\_kms\_key\_id) | KMS key ID or ARN used to encrypt AWS Secrets Manager secrets. | `string` | `null` | no |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain used for the OpenMetadata DNS name. | `string` | `"open-metadata"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to supported resources. | `map(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to supported resources. | `map(string)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID used by the cluster and data plane. | `string` | n/a | yes |
 
 ----
