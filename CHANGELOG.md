@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/cloudandthings/terraform-aws-open-metadata/compare/v1.0.0...v1.1.0) (2026-04-24)
+
+
+### Features
+
+* Added var.eks_node_iam_role_policy_json and var.eks_node_startup_script ([3579394](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/3579394d8a825d0f07a8792df889ac2f92f2630b))
+
 ## 1.0.0 (2026-03-31)
 
 
