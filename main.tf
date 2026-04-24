@@ -135,6 +135,8 @@ module "cluster" {
   eks_node_iam_role_policy_json = var.eks_node_iam_role_policy_json
 
   kms_key_id = var.kms_key_id
+
+  tags = var.tags
 }
 
 module "access" {
