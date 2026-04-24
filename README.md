@@ -221,9 +221,11 @@ See [`CONTRIBUTING.md`](./.github/CONTRIBUTING.md) for further information.
 | <a name="input_eks_node_ami_id"></a> [eks\_node\_ami\_id](#input\_eks\_node\_ami\_id) | Approved AMI ID for the EKS managed node group. | `string` | n/a | yes |
 | <a name="input_eks_node_ami_type"></a> [eks\_node\_ami\_type](#input\_eks\_node\_ami\_type) | AMI type for the EKS managed node group. | `string` | `"AL2023_ARM_64_STANDARD"` | no |
 | <a name="input_eks_node_desired_size"></a> [eks\_node\_desired\_size](#input\_eks\_node\_desired\_size) | Desired node count for the default EKS managed node group. | `number` | n/a | yes |
+| <a name="input_eks_node_iam_role_policy_json"></a> [eks\_node\_iam\_role\_policy\_json](#input\_eks\_node\_iam\_role\_policy\_json) | Optional JSON IAM policy document to attach to the default node role. | `string` | `null` | no |
 | <a name="input_eks_node_instance_type"></a> [eks\_node\_instance\_type](#input\_eks\_node\_instance\_type) | Instance type for the default EKS managed node group. | `string` | n/a | yes |
 | <a name="input_eks_node_max_size"></a> [eks\_node\_max\_size](#input\_eks\_node\_max\_size) | Maximum node count for the default EKS managed node group. | `number` | n/a | yes |
 | <a name="input_eks_node_min_size"></a> [eks\_node\_min\_size](#input\_eks\_node\_min\_size) | Minimum node count for the default EKS managed node group. | `number` | n/a | yes |
+| <a name="input_eks_node_startup_script"></a> [eks\_node\_startup\_script](#input\_eks\_node\_startup\_script) | Optional shell script to run on EKS node startup. | `string` | `null` | no |
 | <a name="input_enable_tls"></a> [enable\_tls](#input\_enable\_tls) | Whether to enable TLS for the OpenMetadata ingress. | `bool` | `false` | no |
 | <a name="input_existing_cluster_ca_data"></a> [existing\_cluster\_ca\_data](#input\_existing\_cluster\_ca\_data) | Existing cluster certificate authority data used when create\_cluster is false. | `string` | `null` | no |
 | <a name="input_existing_cluster_endpoint"></a> [existing\_cluster\_endpoint](#input\_existing\_cluster\_endpoint) | Existing cluster API endpoint used when create\_cluster is false. | `string` | `null` | no |

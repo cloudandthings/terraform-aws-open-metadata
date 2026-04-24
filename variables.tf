@@ -154,6 +154,16 @@ variable "iam_role_path" {
   default     = "/"
 }
 
+variable "eks_node_iam_role_policy_json" {
+  description = "Optional JSON IAM policy document to attach to the default node role."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.eks_node_iam_role_policy_json == null || can(jsondecode(var.eks_node_iam_role_policy_json))
+    error_message = "eks_node_iam_role_policy_json must be a valid JSON string."
+  }
+}
+
 variable "kms_key_id" {
   description = "KMS key ID or ARN used for data-plane encryption (EKS, RDS, OpenSearch)."
   type        = string
@@ -259,6 +269,13 @@ variable "eks_node_ami_type" {
   description = "AMI type for the EKS managed node group."
   type        = string
   default     = "AL2023_ARM_64_STANDARD"
+}
+
+variable "eks_node_startup_script" {
+  description = "Optional shell script to run on EKS node startup."
+  type        = string
+  default     = null
+  sensitive   = true # In case tokens or other secrets are included in the startup script
 }
 
 variable "oidc_thumbprints" {

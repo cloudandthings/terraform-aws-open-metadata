@@ -13,9 +13,11 @@
 | <a name="input_eks_node_ami_id"></a> [eks\_node\_ami\_id](#input\_eks\_node\_ami\_id) | AMI ID for the EKS managed node group. | `string` | n/a | yes |
 | <a name="input_eks_node_ami_type"></a> [eks\_node\_ami\_type](#input\_eks\_node\_ami\_type) | AMI type for the EKS managed node group. | `string` | `"AL2023_ARM_64_STANDARD"` | no |
 | <a name="input_eks_node_desired_size"></a> [eks\_node\_desired\_size](#input\_eks\_node\_desired\_size) | Desired size of the default node group. | `number` | n/a | yes |
+| <a name="input_eks_node_iam_role_policy_json"></a> [eks\_node\_iam\_role\_policy\_json](#input\_eks\_node\_iam\_role\_policy\_json) | Optional JSON IAM policy document to attach to the default node role. | `string` | `null` | no |
 | <a name="input_eks_node_instance_type"></a> [eks\_node\_instance\_type](#input\_eks\_node\_instance\_type) | Instance type for the default node group. | `string` | n/a | yes |
 | <a name="input_eks_node_max_size"></a> [eks\_node\_max\_size](#input\_eks\_node\_max\_size) | Maximum size of the default node group. | `number` | n/a | yes |
 | <a name="input_eks_node_min_size"></a> [eks\_node\_min\_size](#input\_eks\_node\_min\_size) | Minimum size of the default node group. | `number` | n/a | yes |
+| <a name="input_eks_node_startup_script"></a> [eks\_node\_startup\_script](#input\_eks\_node\_startup\_script) | Optional shell script to run on EKS node startup. | `string` | `null` | no |
 | <a name="input_iam_role_path"></a> [iam\_role\_path](#input\_iam\_role\_path) | Path of the IAM role. If not specified then the default of '/' is used. | `string` | `"/"` | no |
 | <a name="input_iam_role_permissions_boundary"></a> [iam\_role\_permissions\_boundary](#input\_iam\_role\_permissions\_boundary) | Permissions boundary applied to cluster IAM roles. | `string` | n/a | yes |
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | KMS key used for cluster secret encryption. | `string` | n/a | yes |
@@ -64,6 +66,7 @@
 
 | Name | Type |
 |------|------|
+| [aws_iam_role_policy.eks_node_custom_inline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_vpc_security_group_ingress_rule.eks_api_from_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 
 ----
