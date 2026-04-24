@@ -110,23 +110,31 @@ module "cluster" {
 
   source = "./modules/cluster"
 
-  create                          = true
-  create_node_group               = var.create_node_group
-  name                            = var.name
+  create            = true
+  create_node_group = var.create_node_group
+
+  name = var.name
+
   vpc_id                          = var.vpc_id
   private_subnet_ids              = var.private_subnet_ids
   cluster_api_ingress_cidr_blocks = var.cluster_api_ingress_cidr_blocks
-  kubernetes_version              = var.kubernetes_version
-  eks_node_instance_type          = var.eks_node_instance_type
-  eks_node_desired_size           = var.eks_node_desired_size
-  eks_node_min_size               = var.eks_node_min_size
-  eks_node_max_size               = var.eks_node_max_size
-  eks_node_ami_id                 = var.eks_node_ami_id
-  eks_node_ami_type               = var.eks_node_ami_type
-  oidc_thumbprints                = var.oidc_thumbprints
-  iam_role_permissions_boundary   = var.iam_role_permissions_boundary
-  iam_role_path                   = var.iam_role_path
-  kms_key_id                      = var.kms_key_id
+
+  kubernetes_version = var.kubernetes_version
+
+  eks_node_instance_type  = var.eks_node_instance_type
+  eks_node_desired_size   = var.eks_node_desired_size
+  eks_node_min_size       = var.eks_node_min_size
+  eks_node_max_size       = var.eks_node_max_size
+  eks_node_ami_id         = var.eks_node_ami_id
+  eks_node_ami_type       = var.eks_node_ami_type
+  eks_node_startup_script = var.eks_node_startup_script
+
+  oidc_thumbprints              = var.oidc_thumbprints
+  iam_role_permissions_boundary = var.iam_role_permissions_boundary
+  iam_role_path                 = var.iam_role_path
+  eks_node_iam_role_policy_json = var.eks_node_iam_role_policy_json
+
+  kms_key_id = var.kms_key_id
 }
 
 module "access" {

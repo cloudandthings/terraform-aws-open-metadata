@@ -1,3 +1,15 @@
+check "eks_node_startup_script" {
+  # if eks_node_ami_type is BOTTLEROCKET_* or WINDOWS_*, eks_node_startup_script is ignored.
+  assert {
+    condition = (
+      var.eks_node_startup_script == null ||
+      startswith(var.eks_node_ami_type, "AL2_") ||
+      startswith(var.eks_node_ami_type, "AL2023_")
+    )
+    error_message = "eks_node_startup_script is only supported for AL2 and AL2023 AMI types."
+  }
+}
+
 # trivy:ignore:AVD-AWS-0104 Node egress_all is intentional — pods require unrestricted outbound to reach crawl targets.
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -33,9 +45,24 @@ module "eks" {
       max_size     = var.eks_node_max_size
       desired_size = var.eks_node_desired_size
 
-      ami_type                              = var.eks_node_ami_type
-      ami_id                                = var.eks_node_ami_id
-      enable_bootstrap_user_data            = true
+      ami_type = var.eks_node_ami_type
+      ami_id   = var.eks_node_ami_id
+
+      enable_bootstrap_user_data = true
+      pre_bootstrap_user_data = (
+        startswith(var.eks_node_ami_type, "AL2_")
+        ? var.eks_node_startup_script
+        : null
+      )
+      cloudinit_pre_nodeadm = (
+        (startswith(var.eks_node_ami_type, "AL2023_") && var.eks_node_startup_script != null)
+        ? [{
+          content_type = "text/x-shellscript"
+          content      = var.eks_node_startup_script
+        }]
+        : null
+      )
+
       attach_cluster_primary_security_group = true
 
       iam_role_path                 = var.iam_role_path
@@ -64,6 +91,14 @@ module "eks" {
       most_recent = true
     }
   }
+}
+
+resource "aws_iam_role_policy" "eks_node_custom_inline" {
+  count = var.create && var.create_node_group && var.eks_node_iam_role_policy_json != null ? 1 : 0
+
+  name   = "${var.name}-node-custom-inline"
+  role   = module.eks.eks_managed_node_groups["default"].iam_role_id
+  policy = var.eks_node_iam_role_policy_json
 }
 
 resource "aws_vpc_security_group_ingress_rule" "eks_api_from_vpc" {
