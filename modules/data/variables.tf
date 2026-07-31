@@ -56,6 +56,12 @@ variable "name_prefix" {
   type        = string
 }
 
+variable "tags" {
+  description = "Tags to apply to supported data-plane resources."
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # Networking
 ################################################################################

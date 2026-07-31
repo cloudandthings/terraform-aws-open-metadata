@@ -158,6 +158,8 @@ resource "aws_db_instance" "this" {
   backup_retention_period = var.rds_backup_retention_period
   backup_window           = "03:00-04:00"
   maintenance_window      = "sun:04:00-sun:05:00"
+
+  tags = var.tags
 }
 
 resource "aws_security_group" "opensearch" {

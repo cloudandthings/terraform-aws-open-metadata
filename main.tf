@@ -215,6 +215,8 @@ module "data" {
   existing_rds_secret_arn        = var.existing_database_secret_arn
   existing_opensearch_endpoint   = var.existing_opensearch_endpoint
   existing_opensearch_secret_arn = var.existing_opensearch_secret_arn
+
+  tags = var.tags
 }
 
 module "app" {

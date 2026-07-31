@@ -40,6 +40,7 @@
 | <a name="input_rds_skip_final_snapshot"></a> [rds\_skip\_final\_snapshot](#input\_rds\_skip\_final\_snapshot) | Whether to skip the final snapshot on deletion. | `bool` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | AWS region. | `string` | n/a | yes |
 | <a name="input_secrets_kms_key_id"></a> [secrets\_kms\_key\_id](#input\_secrets\_kms\_key\_id) | KMS key ID or ARN used to encrypt AWS Secrets Manager secrets. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to supported data-plane resources. | `map(string)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID used by the data plane. | `string` | n/a | yes |
 
 ----
