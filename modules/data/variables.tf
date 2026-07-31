@@ -60,7 +60,6 @@ variable "tags" {
   description = "Tags to apply to supported data-plane resources."
   type        = map(string)
   default     = {}
-  nullable    = false
 }
 
 ################################################################################
