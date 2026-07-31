@@ -36,7 +36,7 @@ module "example" {
   # AWS Context
   region     = var.region
   account_id = var.account_id
-  tags       = {}
+  tags       = { Example = "basic" }
 
   # Security
   iam_role_permissions_boundary = var.iam_role_permissions_boundary
