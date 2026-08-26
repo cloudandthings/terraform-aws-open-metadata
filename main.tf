@@ -207,6 +207,7 @@ module "data" {
   rds_backup_retention_period    = var.rds_backup_retention_period
   rds_ingress_cidr_blocks        = var.rds_ingress_cidr_blocks
   opensearch_engine_version      = var.opensearch_engine_version
+  opensearch_subnet_ids          = var.opensearch_subnet_ids
   opensearch_instance_type       = var.opensearch_instance_type
   opensearch_instance_count      = var.opensearch_instance_count
   opensearch_ebs_volume_size     = var.opensearch_ebs_volume_size

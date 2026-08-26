@@ -220,6 +220,40 @@ resource "aws_secretsmanager_secret_version" "opensearch" {
   })
 }
 
+locals {
+  # AWS rejects more than one subnet on a domain unless zone awareness is on.
+  opensearch_zone_awareness_enabled = var.opensearch_instance_count > 1
+
+  # Subnets the domain may be placed in. Each must be in a distinct availability
+  # zone; opensearch_subnet_ids lets callers pick them when private_subnet_ids
+  # holds more than one subnet per zone.
+  opensearch_candidate_subnet_ids = (
+    var.opensearch_subnet_ids != null ? var.opensearch_subnet_ids : var.private_subnet_ids
+  )
+
+  # availability_zone_count only accepts 2 or 3, and instance_count must be a
+  # multiple of it, so prefer 3 AZs only when the node count divides evenly and
+  # enough subnets were supplied.
+  opensearch_availability_zone_count = (
+    var.opensearch_instance_count % 3 == 0 && length(local.opensearch_candidate_subnet_ids) >= 3
+    ? 3
+    : 2
+  )
+
+  opensearch_subnet_count = (
+    local.opensearch_zone_awareness_enabled ? local.opensearch_availability_zone_count : 1
+  )
+
+  # Clamped, so that too short a subnet list surfaces through the domain's
+  # preconditions instead of an opaque slice() error. Locals are evaluated even
+  # when the domain itself is not created, so this must stay total.
+  opensearch_subnet_ids = slice(
+    local.opensearch_candidate_subnet_ids,
+    0,
+    min(local.opensearch_subnet_count, length(local.opensearch_candidate_subnet_ids))
+  )
+}
+
 resource "aws_opensearch_domain" "this" {
   count = var.create && var.create_opensearch ? 1 : 0
 
@@ -227,8 +261,17 @@ resource "aws_opensearch_domain" "this" {
   engine_version = var.opensearch_engine_version
 
   cluster_config {
-    instance_type  = var.opensearch_instance_type
-    instance_count = var.opensearch_instance_count
+    instance_type          = var.opensearch_instance_type
+    instance_count         = var.opensearch_instance_count
+    zone_awareness_enabled = local.opensearch_zone_awareness_enabled
+
+    dynamic "zone_awareness_config" {
+      for_each = local.opensearch_zone_awareness_enabled ? [1] : []
+
+      content {
+        availability_zone_count = local.opensearch_availability_zone_count
+      }
+    }
   }
 
   ebs_options {
@@ -238,7 +281,7 @@ resource "aws_opensearch_domain" "this" {
   }
 
   vpc_options {
-    subnet_ids         = slice(var.private_subnet_ids, 0, min(var.opensearch_instance_count, length(var.private_subnet_ids)))
+    subnet_ids         = local.opensearch_subnet_ids
     security_group_ids = [aws_security_group.opensearch[0].id]
   }
 
@@ -277,4 +320,26 @@ resource "aws_opensearch_domain" "this" {
       }
     ]
   })
+
+  lifecycle {
+    # Enough subnets to cover every zone the domain will be spread across. A
+    # precondition rather than a check block, so the apply is actually blocked,
+    # and on the resource rather than the variable, so it can see the derived
+    # zone count.
+    precondition {
+      condition     = length(local.opensearch_subnet_ids) == local.opensearch_subnet_count
+      error_message = "OpenSearch needs ${local.opensearch_subnet_count} subnet(s) in distinct availability zones for ${var.opensearch_instance_count} data node(s), but only ${length(local.opensearch_candidate_subnet_ids)} were supplied. Add subnets to private_subnet_ids, set opensearch_subnet_ids, or lower opensearch_instance_count."
+    }
+
+    # AWS requires the data node count to divide evenly across the zones. The
+    # zone count is capped by the subnets available, so a valid node count can
+    # still be invalid once the cap applies.
+    precondition {
+      condition = (
+        !local.opensearch_zone_awareness_enabled
+        || var.opensearch_instance_count % local.opensearch_availability_zone_count == 0
+      )
+      error_message = "opensearch_instance_count (${var.opensearch_instance_count}) must be a multiple of the ${local.opensearch_availability_zone_count} availability zones this domain will use. Supply at least 3 subnets to use 3 availability zones, or set opensearch_instance_count to a multiple of ${local.opensearch_availability_zone_count}."
+    }
+  }
 }

@@ -25,9 +25,10 @@
 | <a name="input_node_security_group_id"></a> [node\_security\_group\_id](#input\_node\_security\_group\_id) | Node security group ID allowed to reach the data plane. | `string` | `null` | no |
 | <a name="input_opensearch_ebs_volume_size"></a> [opensearch\_ebs\_volume\_size](#input\_opensearch\_ebs\_volume\_size) | OpenSearch EBS volume size in GB. | `number` | n/a | yes |
 | <a name="input_opensearch_engine_version"></a> [opensearch\_engine\_version](#input\_opensearch\_engine\_version) | OpenSearch engine version. | `string` | n/a | yes |
-| <a name="input_opensearch_instance_count"></a> [opensearch\_instance\_count](#input\_opensearch\_instance\_count) | OpenSearch data node count. | `number` | n/a | yes |
+| <a name="input_opensearch_instance_count"></a> [opensearch\_instance\_count](#input\_opensearch\_instance\_count) | OpenSearch data node count. Any value above 1 enables zone awareness, so the count must be a multiple of 2 or 3 to spread nodes evenly across availability zones. | `number` | n/a | yes |
 | <a name="input_opensearch_instance_type"></a> [opensearch\_instance\_type](#input\_opensearch\_instance\_type) | OpenSearch node instance type. | `string` | n/a | yes |
 | <a name="input_opensearch_master_username"></a> [opensearch\_master\_username](#input\_opensearch\_master\_username) | OpenSearch master username. | `string` | n/a | yes |
+| <a name="input_opensearch_subnet_ids"></a> [opensearch\_subnet\_ids](#input\_opensearch\_subnet\_ids) | Subnet IDs for the OpenSearch domain, one per availability zone. Each must be in a distinct availability zone, because zone awareness places exactly one subnet per zone. Leave null to use the first subnets of private\_subnet\_ids, which assumes that list holds at most one subnet per availability zone. | `list(string)` | `null` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Private subnet IDs used by the data plane. | `list(string)` | n/a | yes |
 | <a name="input_rds_allocated_storage"></a> [rds\_allocated\_storage](#input\_rds\_allocated\_storage) | Allocated RDS storage in GB. | `number` | n/a | yes |
 | <a name="input_rds_backup_retention_period"></a> [rds\_backup\_retention\_period](#input\_rds\_backup\_retention\_period) | Number of days to retain RDS automated backups. Set to 0 to disable backups. | `number` | `7` | no |
