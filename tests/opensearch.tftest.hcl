@@ -92,7 +92,7 @@ run "two_nodes_enable_zone_awareness_across_two_azs" {
   }
 }
 
-# Node counts divisible by three use three AZs, so nodes distribute evenly.
+# Three or more nodes use three AZs when three subnets are available.
 run "three_nodes_use_three_azs" {
   command = plan
 
@@ -115,8 +115,9 @@ run "three_nodes_use_three_azs" {
   }
 }
 
-# Four nodes are not divisible by three, so they fall back to two AZs.
-run "four_nodes_fall_back_to_two_azs" {
+# Scaling from 3 to 4 nodes must not drop back to two AZs: that would lose
+# resilience and change the subnets, forcing a blue/green deployment.
+run "four_nodes_stay_on_three_azs" {
   command = plan
 
   module {
@@ -128,8 +129,27 @@ run "four_nodes_fall_back_to_two_azs" {
   }
 
   assert {
+    condition     = aws_opensearch_domain.this[0].cluster_config[0].zone_awareness_config[0].availability_zone_count == 3
+    error_message = "Four data nodes must spread across three availability zones."
+  }
+}
+
+# Without a third subnet, an even node count uses two AZs.
+run "four_nodes_with_two_subnets_use_two_azs" {
+  command = plan
+
+  module {
+    source = "./modules/data"
+  }
+
+  variables {
+    opensearch_instance_count = 4
+    private_subnet_ids        = ["subnet-00000000000000001", "subnet-00000000000000002"]
+  }
+
+  assert {
     condition     = aws_opensearch_domain.this[0].cluster_config[0].zone_awareness_config[0].availability_zone_count == 2
-    error_message = "Four data nodes must spread across two availability zones."
+    error_message = "Four data nodes with two subnets must spread across two availability zones."
   }
 }
 
@@ -221,8 +241,8 @@ run "explicit_subnet_ids_override_private_subnets" {
   }
 }
 
-# A node count that divides evenly by neither 2 nor 3 is rejected up front.
-run "uneven_node_count_is_rejected" {
+# AWS accepts node counts that are not a multiple of 3 across three AZs.
+run "five_nodes_use_three_azs" {
   command = plan
 
   module {
@@ -233,7 +253,26 @@ run "uneven_node_count_is_rejected" {
     opensearch_instance_count = 5
   }
 
-  expect_failures = [var.opensearch_instance_count]
+  assert {
+    condition     = aws_opensearch_domain.this[0].cluster_config[0].zone_awareness_config[0].availability_zone_count == 3
+    error_message = "Five data nodes must spread across three availability zones."
+  }
+}
+
+# Two AZs need an even node count.
+run "five_nodes_with_two_subnets_is_rejected" {
+  command = plan
+
+  module {
+    source = "./modules/data"
+  }
+
+  variables {
+    opensearch_instance_count = 5
+    private_subnet_ids        = ["subnet-00000000000000001", "subnet-00000000000000002"]
+  }
+
+  expect_failures = [aws_opensearch_domain.this]
 }
 
 # Zero and fractional node counts are not valid domain sizes.

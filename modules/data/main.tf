@@ -231,11 +231,12 @@ locals {
     var.opensearch_subnet_ids != null ? var.opensearch_subnet_ids : var.private_subnet_ids
   )
 
-  # availability_zone_count only accepts 2 or 3, and instance_count must be a
-  # multiple of it, so prefer 3 AZs only when the node count divides evenly and
-  # enough subnets were supplied.
+  # availability_zone_count only accepts 2 or 3. Use 3 whenever there are enough
+  # nodes and subnets, so scaling up never drops back to 2 zones (which would
+  # also change the subnets and force a blue/green deployment). AWS accepts node
+  # counts that are not a multiple of 3 across 3 zones; they are just unbalanced.
   opensearch_availability_zone_count = (
-    var.opensearch_instance_count % 3 == 0 && length(local.opensearch_candidate_subnet_ids) >= 3
+    var.opensearch_instance_count >= 3 && length(local.opensearch_candidate_subnet_ids) >= 3
     ? 3
     : 2
   )
@@ -331,15 +332,15 @@ resource "aws_opensearch_domain" "this" {
       error_message = "OpenSearch needs ${local.opensearch_subnet_count} subnet(s) in distinct availability zones for ${var.opensearch_instance_count} data node(s), but only ${length(local.opensearch_candidate_subnet_ids)} were supplied. Add subnets to private_subnet_ids, set opensearch_subnet_ids, or lower opensearch_instance_count."
     }
 
-    # AWS requires the data node count to divide evenly across the zones. The
-    # zone count is capped by the subnets available, so a valid node count can
-    # still be invalid once the cap applies.
+    # A two-zone domain needs an even data node count. The zone count is capped
+    # by the subnets available, so an odd count is only valid with 3 subnets.
     precondition {
       condition = (
         !local.opensearch_zone_awareness_enabled
-        || var.opensearch_instance_count % local.opensearch_availability_zone_count == 0
+        || local.opensearch_availability_zone_count == 3
+        || var.opensearch_instance_count % 2 == 0
       )
-      error_message = "opensearch_instance_count (${var.opensearch_instance_count}) must be a multiple of the ${local.opensearch_availability_zone_count} availability zones this domain will use. Supply at least 3 subnets to use 3 availability zones, or set opensearch_instance_count to a multiple of ${local.opensearch_availability_zone_count}."
+      error_message = "opensearch_instance_count (${var.opensearch_instance_count}) must be even when the domain uses 2 availability zones. Supply at least 3 subnets to use 3 availability zones, or set opensearch_instance_count to an even number."
     }
   }
 }

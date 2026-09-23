@@ -414,7 +414,7 @@ variable "opensearch_instance_type" {
 }
 
 variable "opensearch_instance_count" {
-  description = "OpenSearch data node count. Any value above 1 enables zone awareness, so the count must be a multiple of 2 or 3 to spread nodes evenly across availability zones."
+  description = "OpenSearch data node count. Any value above 1 enables zone awareness. Three or more nodes use three availability zones when at least three subnets are available, otherwise two, which requires an even count. Multiples of 3 spread nodes evenly across three zones."
   type        = number
   default     = 2
 
@@ -422,13 +422,8 @@ variable "opensearch_instance_count" {
     condition = (
       var.opensearch_instance_count >= 1
       && floor(var.opensearch_instance_count) == var.opensearch_instance_count
-      && (
-        var.opensearch_instance_count == 1
-        || var.opensearch_instance_count % 3 == 0
-        || var.opensearch_instance_count % 2 == 0
-      )
     )
-    error_message = "opensearch_instance_count must be a whole number: 1, or a multiple of 2 or 3, so data nodes distribute evenly across availability zones."
+    error_message = "opensearch_instance_count must be a whole number of at least 1."
   }
 }
 
