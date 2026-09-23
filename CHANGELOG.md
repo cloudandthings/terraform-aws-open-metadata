@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2](https://github.com/cloudandthings/terraform-aws-open-metadata/compare/v1.1.1...v1.1.2) (2026-09-23)
+
+
+### Bug Fixes
+
+* Allow null tags in the data module ([7689c86](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/7689c86f941ddbf290359195c71cae46613e395b))
+* Apply tags to the RDS instance ([3493c69](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/3493c696c7bc07a945eb06d668effbc51a5ed3d9))
+* Apply tags to the RDS instance ([c15fbee](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/c15fbee34e01538e3d6faf2c7e12c71f09f084ac))
+* Enable OpenSearch zone awareness for multi-node domains ([#12](https://github.com/cloudandthings/terraform-aws-open-metadata/issues/12)) ([01da56d](https://github.com/cloudandthings/terraform-aws-open-metadata/commit/01da56d8af7cb38fc5ebd3e706ce189116221729))
+
 ## [1.1.1](https://github.com/cloudandthings/terraform-aws-open-metadata/compare/v1.1.0...v1.1.1) (2026-04-24)
 
 
