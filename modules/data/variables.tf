@@ -167,14 +167,33 @@ variable "opensearch_engine_version" {
   type        = string
 }
 
+variable "opensearch_subnet_ids" {
+  description = "Subnet IDs for the OpenSearch domain, one per availability zone. Each must be in a distinct availability zone, because zone awareness places exactly one subnet per zone. Leave null to use the first subnets of private_subnet_ids, which assumes that list holds at most one subnet per availability zone."
+  type        = list(string)
+  default     = null
+
+  validation {
+    condition     = var.opensearch_subnet_ids == null || length(coalesce(var.opensearch_subnet_ids, [])) > 0
+    error_message = "opensearch_subnet_ids must be null or contain at least one subnet ID."
+  }
+}
+
 variable "opensearch_instance_type" {
   description = "OpenSearch node instance type."
   type        = string
 }
 
 variable "opensearch_instance_count" {
-  description = "OpenSearch data node count."
+  description = "OpenSearch data node count. Any value above 1 enables zone awareness. Three or more nodes use three availability zones when at least three subnets are available, otherwise two, which requires an even count. Multiples of 3 spread nodes evenly across three zones."
   type        = number
+
+  validation {
+    condition = (
+      var.opensearch_instance_count >= 1
+      && floor(var.opensearch_instance_count) == var.opensearch_instance_count
+    )
+    error_message = "opensearch_instance_count must be a whole number of at least 1."
+  }
 }
 
 variable "opensearch_ebs_volume_size" {
